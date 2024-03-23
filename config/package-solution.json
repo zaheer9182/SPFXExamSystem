@@ -1,0 +1,40 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/spfx-build/package-solution.schema.json",
+  "solution": {
+    "name": "questions-app-client-side-solution",
+    "id": "06b5c2e3-cc80-4fdc-9e0b-f8ae524ecd50",
+    "version": "1.0.0.0",
+    "includeClientSideAssets": true,
+    "skipFeatureDeployment": true,
+    "isDomainIsolated": false,
+    "developer": {
+      "name": "",
+      "websiteUrl": "",
+      "privacyUrl": "",
+      "termsOfUseUrl": "",
+      "mpnId": "Undefined-1.18.2"
+    },
+    "metadata": {
+      "shortDescription": {
+        "default": "QuestionsApp description"
+      },
+      "longDescription": {
+        "default": "QuestionsApp description"
+      },
+      "screenshotPaths": [],
+      "videoUrl": "",
+      "categories": []
+    },
+    "features": [
+      {
+        "title": "questions-app Feature",
+        "description": "The feature that activates elements of the questions-app solution.",
+        "id": "3b0866fc-9bd5-4229-963d-a167111df22c",
+        "version": "1.0.0.0"
+      }
+    ]
+  },
+  "paths": {
+    "zippedPackage": "solution/questions-app.sppkg"
+  }
+}
