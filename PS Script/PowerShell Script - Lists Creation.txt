@@ -1,0 +1,86 @@
+# Connect to SharePoint Online
+#Please change the site URL
+
+Connect-PnPOnline -Url "https://14jzsq.sharepoint.com/sites/Test" -UseWebLogin
+
+# Define the list names
+$questionAnswersListName = "QuestionsAnswers"
+$resultsListName = "Results"
+$surveyListName = "Survey"
+
+# Create the SharePoint lists
+New-PnPList -Title $questionAnswersListName -Template GenericList
+New-PnPList -Title $resultsListName -Template GenericList
+New-PnPList -Title $surveyListName -Template GenericList
+
+# Add columns to the 'QuestionsAnswers' list
+Add-PnPField -List $questionAnswersListName -DisplayName "Answer" -Type Text -InternalName "Answer"
+Add-PnPField -List $questionAnswersListName -DisplayName "QuestionType" -Type Choice -InternalName "QuestionType" -Choices "Input", "Multiple Choice"
+Add-PnPField -List $questionAnswersListName -DisplayName "CorrectAnswer" -Type Text -InternalName "CorrectAnswer"
+
+# Add columns to the 'Results' list
+Add-PnPField -List $resultsListName -DisplayName "UserEmail" -Type Text -InternalName "UserEmail"
+Add-PnPField -List $resultsListName -DisplayName "UserCountry" -Type Text -InternalName "UserCountry"
+Add-PnPField -List $resultsListName -DisplayName "UserPhone" -Type Text -InternalName "UserPhone"
+Add-PnPField -List $resultsListName -DisplayName "TotalMarks" -Type Number -InternalName "TotalMarks"
+Add-PnPField -List $resultsListName -DisplayName "MarksObtained" -Type Number -InternalName "MarksObtained"
+
+# Add columns to the 'Survey' list
+Add-PnPField -List $surveyListName -DisplayName "Email" -Type Text -InternalName "Email"
+Add-PnPField -List $surveyListName -DisplayName "Country" -Type Text -InternalName "Country"
+Add-PnPField -List $surveyListName -DisplayName "Phone" -Type Text -InternalName "Phone"
+Add-PnPField -List $surveyListName -DisplayName "Message" -Type Text -InternalName "Message"
+
+# Add columns to default view for each list
+$questionAnswersDefaultView = Get-PnPView -List $questionAnswersListName -Identity "All Items"
+Add-PnPViewColumn -Identity $questionAnswersDefaultView -Field "Answer"
+Add-PnPViewColumn -Identity $questionAnswersDefaultView -Field "QuestionType"
+Add-PnPViewColumn -Identity $questionAnswersDefaultView -Field "CorrectAnswer"
+$questionAnswersDefaultView.Update()
+
+$resultsDefaultView = Get-PnPView -List $resultsListName -Identity "All Items"
+Add-PnPViewColumn -Identity $resultsDefaultView -Field "UserEmail"
+Add-PnPViewColumn -Identity $resultsDefaultView -Field "UserCountry"
+Add-PnPViewColumn -Identity $resultsDefaultView -Field "UserPhone"
+Add-PnPViewColumn -Identity $resultsDefaultView -Field "TotalMarks"
+Add-PnPViewColumn -Identity $resultsDefaultView -Field "MarksObtained"
+$resultsDefaultView.Update()
+
+$surveyDefaultView = Get-PnPView -List $surveyListName -Identity "All Items"
+Add-PnPViewColumn -Identity $surveyDefaultView -Field "Email"
+Add-PnPViewColumn -Identity $surveyDefaultView -Field "Country"
+Add-PnPViewColumn -Identity $surveyDefaultView -Field "Phone"
+Add-PnPViewColumn -Identity $surveyDefaultView -Field "Message"
+$surveyDefaultView.Update()
+
+# Sample data for QuestionsAnswers list
+$questionAnswersData = @(
+    "What is the capital of France?#Paris|London|Islamabad|New Delhi#Multiple Choice#Paris",
+    "What is the boiling point of water in Celsius?# #Input#100 degrees", # Added empty space for Input type
+    "Who wrote the play 'Romeo and Juliet'?#William Shakespeare|Charles Dickens|Jane Austen|Mark Twain#Multiple Choice#William Shakespeare",
+    "What is the chemical symbol for gold?# #Input#Au", # Added empty space for Input type
+    "What is the capital of Japan?#Tokyo|Beijing|Seoul|Bangkok#Multiple Choice#Tokyo",
+    "What is the square root of 144?# #Input#12", # Added empty space for Input type
+    "What is the chemical formula for water?# #Input#H2O", # Added empty space for Input type
+    "What is the largest planet in our solar system?#Jupiter|Mars|Earth|Saturn#Multiple Choice#Jupiter",
+    "Who is known as the 'Father of Computers'?#Alan Turing|Charles Babbage|Ada Lovelace|Bill Gates#Multiple Choice#Charles Babbage",
+    "What is the capital of Australia?# #Input#Canberra", # Added empty space for Input type
+    "What is the tallest mountain in the world?#Mount Everest|K2|Kilimanjaro|Mount Fuji#Multiple Choice#Mount Everest"
+)
+
+# Add data to the 'QuestionsAnswers' list
+foreach ($item in $questionAnswersData) {
+    $fields = $item -split '#'
+    $answerChoices = $fields[1].Trim().Split('|') -join '|'
+    $itemProperties = @{
+        "Title" = $fields[0]
+        "Answer" = $answerChoices
+        "QuestionType" = $fields[2]
+        "CorrectAnswer" = $fields[3]
+    }
+    Add-PnPListItem -List $questionAnswersListName -Values $itemProperties
+}
+
+# Disconnect from SharePoint Online
+Disconnect-PnPOnline
+
