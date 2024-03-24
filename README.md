@@ -38,4 +38,9 @@ Contributors
 Muhammad Zaheer Ahmed
 Consultant SharePoint & Power Platform
 
-Note: it is just a proto type version, there's alot more to come.
+Note: There is a folder PS Script, there is a power shell script inside which will create the required SP Lists, please refer this script and don't forget to change the Site Url.
+
+
+it is just a proto type version, there's alot more to come.
+
+
